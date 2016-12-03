@@ -24,40 +24,39 @@ import sys
 import cozmo
 from cozmo.util import degrees, Pose, distance_mm, speed_mmps
 import numpy as np
+import tkinter as tk
 
-class explore:
-    
-    def __init__(self,length,width,robot):
-        self.states= np.zeros((length,width))
-        self.cozmo_state=(0,0)
-        self.robot=robot
-    
-    def in_state(state):
-        self.cozmo_state=state  
-
-    def get_state():
-        return self.robot.pose
-
-    def move_to_state():
-        return 0
     
 def run(sdk_conn):
-    '''The run method runs once Cozmo is connected.'''
     robot = sdk_conn.wait_for_robot()
+    
 
     #robot.go_to_pose(Pose(200, 200, 0,angle_z=degrees(90)), relative_to_robot=False).wait_for_completed()
     #print (robot.pose)
     
     tasks = [0,0,90,0,270,0,0]
+    
 
-    for i in tasks:
+    while(True):
+        task=input()
+    #for i in tasks:
+        if(task=='w'):
+            i=0
+        elif(task=='a'):
+            i=-90
+        elif(task=='d'):
+            i=90
+        elif(task=='s'):
+            i=180
+
+
         robot.turn_in_place(degrees(i)).wait_for_completed()
         robot.drive_straight(distance_mm(100),speed_mmps(50)).wait_for_completed()
 
 
 if __name__ == '__main__':
-    cozmo.setup_basic_logging()
-    try:
-        cozmo.connect(run)
-    except cozmo.ConnectionError as e:
-        sys.exit("A connection error occurred: %s" % e)
+     cozmo.setup_basic_logging()
+     try:
+         cozmo.connect(run)
+     except cozmo.ConnectionError as e:
+         sys.exit("A connection error occurred: %s" % e)
