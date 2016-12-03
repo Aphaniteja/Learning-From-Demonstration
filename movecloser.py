@@ -27,17 +27,24 @@ import numpy as np
 import tkinter as tk
 
 class Environment:
-    def __init__(self,height,width):
+    def __init__(self,height,width,goal=None,Reward=None):
+        ## Specify goal or reward matrix if you wish to 
         self.states = np.zeros((height,width))
+        if (Reward):
+           self.reward_matrix=Reward
+        else:        
+           self.reward_matrix=np.zeros((height*width),(height*width))
         self.source = (0,0)
-        self.goal = (3,3)
-        self.reward = 1
+        if (goal!=None)
+            self.goal = goal
+        else:
+            self.goal=(3,3)        
     
     def set_goal(self,location):
         self.goal = location
 
     def set_reward(self,reward_val):
-        self.reward = reward_val
+        self.reward_matrix[goal] = reward_val        
 
 
 class Agent:
@@ -47,6 +54,7 @@ class Agent:
         self.map = environment.states
         self.height = self.map.shape[0]
         self.width = self.map.shape[1]
+        self.reward_matrix=np.copy(environment.reward_matrix)
         self.map[0][0]=1
         self.move_count=0
 
@@ -62,42 +70,7 @@ class Agent:
         elif((dir%360)==270):
             current_state[1]=current_state[1]-1
 
-        return current_state
-
-
-    def goto_state(self,state):
-        current_state=self.current_state
-        xdiff=state[0]-current_state[0]
-        ydiff=state[1]-current_state[1]
-        while(xdiff>0):
-           robot.turn_in_place(degrees(0)).wait_for_completed()
-           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
-           update_map("w")
-           current_state=self.current_state
-           xdiff=state[0]-current_state[0]
-           ydiff=state[1]-current_state[1]
-        while(xdiff<0):
-           robot.turn_in_place(degrees(180)).wait_for_completed()
-           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
-           update_map("s")
-           current_state=self.current_state
-           xdiff=state[0]-current_state[0]
-           ydiff=state[1]-current_state[1]           
-        while(ydiff>0):
-           robot.turn_in_place(degrees(90)).wait_for_completed()
-           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
-           update_map("d")
-
-           current_state=self.current_state
-           xdiff=state[0]-current_state[0]
-           ydiff=state[1]-current_state[1]
-        while(ydiff<0):
-           robot.turn_in_place(degrees(270)).wait_for_completed()
-           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed
-           update_map("a")
-           current_state=self.current_state
-           xdiff=state[0]-current_state[0]
-           ydiff=state[1]-current_state[1]           
+        return current_state           
 
     def update_map(self,move_pos):
         current_state=list(self.current_state)
