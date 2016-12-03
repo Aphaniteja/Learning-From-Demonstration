@@ -1,4 +1,3 @@
-!/usr/bin/env python3
 
 # Copyright (c) 2016 Anki, Inc.
 #
@@ -31,7 +30,7 @@ class explore:
     def __init__(self,length,width,robot):
         self.states= np.zeros((length,width))
         self.cozmo_state=(0,0)
-	self.robot=robot
+        self.robot=robot
     
     def in_state(state):
         self.cozmo_state=state  
@@ -52,8 +51,8 @@ def run(sdk_conn):
     tasks = [0,0,90,0,270,0,0]
 
     for i in tasks:
-	robot.turn_in_place(degrees(i)).wait_for_completed()
-	robot.drive_straight(distance_mm(100),speed_mmps(50)).wait_for_completed()
+        robot.turn_in_place(degrees(i)).wait_for_completed()
+        robot.drive_straight(distance_mm(100),speed_mmps(50)).wait_for_completed()
 
 
 if __name__ == '__main__':
