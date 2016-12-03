@@ -174,16 +174,20 @@ def run(sdk_conn):
     field = Environment(5,5)
     bot = Agent((0,0),field)
     movesr=[]
+    executed_moves=[]
 
     while(True):
         
     #for i in tasks:  
         moves=bot.get_legal_moves()
 
+
         #task=input()
         task=np.random.choice(moves,1)
 
         task=task[0]
+
+        executed_moves.append(task)
 
         moves.extend(['p','l','o','c'])
 
@@ -218,23 +222,29 @@ def run(sdk_conn):
 
 
         robot.turn_in_place(degrees(i)).wait_for_completed()
-        robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
+        robot.drive_straight(distance_mm(100),speed_mmps(200)).wait_for_completed()
         bot.print_map()
 
         if(bot.current_state[0]==1 and bot.current_state[1]==1):
             robot.set_all_backpack_lights(cozmo.lights.blue_light)
             robot.play_anim_trigger(cozmo.anim.Triggers.MajorWin).wait_for_completed()
+            bot.print_map()
             robot.go_to_pose(poser, relative_to_robot=False).wait_for_completed()
-            print(poser)
-            print(robot.pose)
-            movesr.append(bot.move_count-movesr[-1])
+            #print(poser)
+            #print(robot.pose)
+            bot.current_state=(0,0)
+            bot.orientation=0
+            print(executed_moves)
+            movesr.append(bot.move_count)
+            bot.moves_count=0
             print(movesr[-1],"latest moves")
+            
 
         
-        bot.print_map()
-        print(bot.get_legal_moves())
-        print(bot.orientation)
-        print(bot.current_state)
+        #bot.print_map()
+        #print(bot.get_legal_moves())
+        #print(bot.orientation)
+        #print(bot.current_state)
 
 
 
