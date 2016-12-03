@@ -48,6 +48,7 @@ class Agent:
         self.height = self.map.shape[0]
         self.width = self.map.shape[1]
         self.map[0][0]=1
+        self.move_count=0
 
         self.allowable = [['w','d','s','a'],['s','a','w','d'],['d','s','a','w'],['a','w','d','s']]
 
@@ -64,7 +65,39 @@ class Agent:
         return current_state
 
 
+    def goto_state(self,state):
+        current_state=self.current_state
+        xdiff=state[0]-current_state[0]
+        ydiff=state[1]-current_state[1]
+        while(xdiff>0):
+           robot.turn_in_place(degrees(0)).wait_for_completed()
+           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
+           update_map("w")
+           current_state=self.current_state
+           xdiff=state[0]-current_state[0]
+           ydiff=state[1]-current_state[1]
+        while(xdiff<0):
+           robot.turn_in_place(degrees(180)).wait_for_completed()
+           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
+           update_map("s")
+           current_state=self.current_state
+           xdiff=state[0]-current_state[0]
+           ydiff=state[1]-current_state[1]           
+        while(ydiff>0):
+           robot.turn_in_place(degrees(90)).wait_for_completed()
+           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
+           update_map("d")
 
+           current_state=self.current_state
+           xdiff=state[0]-current_state[0]
+           ydiff=state[1]-current_state[1]
+        while(ydiff<0):
+           robot.turn_in_place(degrees(270)).wait_for_completed()
+           robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed
+           update_map("a")
+           current_state=self.current_state
+           xdiff=state[0]-current_state[0]
+           ydiff=state[1]-current_state[1]           
 
     def update_map(self,move_pos):
         current_state=list(self.current_state)
@@ -133,15 +166,14 @@ class Agent:
     
 def run(sdk_conn):
     robot = sdk_conn.wait_for_robot()
-    
+    poser=robot.pose
 
     #robot.go_to_pose(Pose(200, 200, 0,angle_z=degrees(90)), relative_to_robot=False).wait_for_completed()
-    #print (robot.pose)
     
     tasks = [0,0,90,0,270,0,0]
     field = Environment(5,5)
     bot = Agent((0,0),field)
-
+    movesr=[]
 
     while(True):
         
@@ -160,7 +192,7 @@ def run(sdk_conn):
             robot.play_anim_trigger(cozmo.anim.Triggers.DriveEndAngry).wait_for_completed()
             print('Try',moves)
             continue
-
+        bot.move_count+=1
         print(task)
         
 
@@ -189,10 +221,14 @@ def run(sdk_conn):
         robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
         bot.print_map()
 
-        if(bot.current_state[0]==2 and bot.current_state[1]==2):
+        if(bot.current_state[0]==1 and bot.current_state[1]==1):
             robot.set_all_backpack_lights(cozmo.lights.blue_light)
             robot.play_anim_trigger(cozmo.anim.Triggers.MajorWin).wait_for_completed()
-            return
+            robot.go_to_pose(poser, relative_to_robot=False).wait_for_completed()
+            print(poser)
+            print(robot.pose)
+            movesr.append(bot.move_count)
+            print(movesr[-1],"movesr")
 
         
         bot.print_map()
