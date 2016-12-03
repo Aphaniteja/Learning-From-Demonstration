@@ -69,19 +69,19 @@ class Agent:
     def update_map(self,move_pos):
         current_state=list(self.current_state)
         if(move_pos=='w'):
-            self.orientation=self.orientation+0
+            self.orientation=(self.orientation+0)%360
             current_state=self.remap_update(current_state,self.orientation)
             self.map[current_state[0]][current_state[1]]+=1
         elif(move_pos=='s'):
-            self.orientation=self.orientation+180
+            self.orientation=(self.orientation+180)%360
             current_state=self.remap_update(current_state,self.orientation)
             self.map[current_state[0]][current_state[1]]+=1
         elif(move_pos=='d'):
-            self.orientation=self.orientation-90
+            self.orientation=(self.orientation-90)%360
             current_state=self.remap_update(current_state,self.orientation)
             self.map[current_state[0]][current_state[1]]+=1
         elif(move_pos=='a'):
-            self.orientation=self.orientation+90
+            self.orientation=(self.orientation+90)%360
             current_state=self.remap_update(current_state,self.orientation)
             self.map[current_state[0]][current_state[1]]+=1
 
@@ -148,8 +148,10 @@ def run(sdk_conn):
     #for i in tasks:  
         moves=bot.get_legal_moves()
 
-        task=input()
-        #task=np.random.choice(moves,1)
+        #task=input()
+        task=np.random.choice(moves,1)
+
+        task=task[0]
 
         moves.extend(['p','l','o','c'])
 
@@ -190,8 +192,12 @@ def run(sdk_conn):
         if(bot.current_state[0]==2 and bot.current_state[1]==2):
             robot.set_all_backpack_lights(cozmo.lights.blue_light)
             robot.play_anim_trigger(cozmo.anim.Triggers.MajorWin).wait_for_completed()
+            return
 
         
+        bot.print_map()
+        print(bot.get_legal_moves())
+        print(bot.orientation)
         print(bot.current_state)
 
 
