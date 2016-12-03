@@ -227,8 +227,8 @@ def run(sdk_conn):
             robot.go_to_pose(poser, relative_to_robot=False).wait_for_completed()
             print(poser)
             print(robot.pose)
-            movesr.append(bot.move_count)
-            print(movesr[-1],"movesr")
+            movesr.append(bot.move_count-movesr[-1])
+            print(movesr[-1],"latest moves")
 
         
         bot.print_map()
