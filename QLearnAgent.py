@@ -3,6 +3,7 @@ import sys
 #import cozmo
 #from cozmo.util import degrees, Pose, distance_mm, speed_mmps
 import numpy as np
+import matplotlib.pyplot as plt
 #import tkinter as tk
 
 class Environment:
@@ -152,7 +153,7 @@ class Agent:
 
     def agentChoose(self):    # epsilon greedy
         s=self.mapper[self.current_state]
-        if(np.random.rand()<0.9):
+        if(np.random.rand()<0.7):
             ind=np.argmax(self.Q[s,:])
             action_map_inv={0:'u',1:'j',2:'h',3:'k'}
             
@@ -214,7 +215,7 @@ def run():
     executed_moves=[]
     movesr=[]
 
-    l=1
+    l='m'
     
     while(True):
         
@@ -225,7 +226,14 @@ def run():
                     print('\t'),
                     if(i%5==4):
                         print('\n')
-                l=1
+                l='m'
+                continue
+
+
+        if l=='c':
+                plt.plot(movesr)
+                plt.show()
+                l='m'
                 continue
                 
         
@@ -237,17 +245,21 @@ def run():
         moves.extend(['p','l','o','c','q'])
         ind=bot.agentChoose()
         action_map_inv={0:'u',1:'j',2:'h',3:'k'}
+
+
         #print(ind)
         #print('chose move is ', action_map_inv[ind])
         
-        task_policy=bot.agentChoose()
+        if l=='a':
+            task_policy=bot.agentChoose()
         #print(task_policy)
-        task = action_map_inv[task_policy]
+            task = action_map_inv[task_policy]
         
         #task=np.random.choice(['u','h','j','k'],1)
         #task=task[0]
         
-        #task=raw_input()
+        if l=='m':
+            task=raw_input()
         
         action=task
         #print(action)
@@ -343,7 +355,7 @@ def run():
             bot.move_count=0
             bot.map=np.zeros((5,5))
             print(movesr[-1],"latest moves")
-            l=raw_input()
+            l=raw_input('Amber:')
             
                         
                     
