@@ -259,7 +259,7 @@ def run():
         #task=task[0]
         
         if l=='m':
-            task=raw_input()
+            task=input()
         
         action=task
         #print(action)
@@ -319,7 +319,7 @@ def run():
 
         #if(bot.map[2][2]==1):
         #    robot.set_all_backpack_lights(cozmo.lights.blue_light)
-        #bot.print_map()
+        bot.print_map()
         
         if(action in ['u','j','h','k']):
         
@@ -355,7 +355,9 @@ def run():
             bot.move_count=0
             bot.map=np.zeros((5,5))
             print(movesr[-1],"latest moves")
-            l=raw_input('Amber:')
+            l=input('Amber:')
+            if (l=="save"):
+                np.save("lfd5.npy",bot.Q,) 
             
                         
                     

@@ -208,7 +208,7 @@ def run(sdk_conn):
     tasks = [0,0,90,0,270,0,0]
     field = Environment(5,5)
     bot = Agent((0,0),field)
-
+    tasksr=[]
     print('enter:')
 
     
@@ -258,12 +258,17 @@ def run(sdk_conn):
             if(task=='r'):
                rflag=True
                l='a'
+            
+                           
         if l=='a':
             task_policy=bot.agentChoose()
         #print(task_policy)
             task = action_map_inv[task_policy]
             print (task)
-        
+        tasksr.append(task)
+        #if(len(tasksr)>5):
+           #if tasksr[-1]==tasksr[-2] or tasksr[-1]==tasksr[-3]:
+              #task=np.random.choice(['u','h','j','k'],1)[0]
         #task=np.random.choice(['u','h','j','k'],1)
         #task=task[0]
         
@@ -323,7 +328,7 @@ def run(sdk_conn):
         #print(bot.Q,"Qmat")
         if(rflag):
             robot.turn_in_place(degrees(i)).wait_for_completed()
-            robot.drive_straight(distance_mm(50),speed_mmps(200)).wait_for_completed()
+            robot.drive_straight(distance_mm(70),speed_mmps(200)).wait_for_completed()
 
         #if(bot.map[4][4]==1):
         #    robot.set_all_backpack_lights(cozmo.lights.blue_light)
@@ -377,7 +382,8 @@ def run(sdk_conn):
             if(l=="diasble"):
                 rflag=False 
                 l='a'                
-                            
+            if (l=="save"):
+                np.save("lfd10.npy",bot.Q,)            
                     
 
         #print(bot.get_legal_moves())

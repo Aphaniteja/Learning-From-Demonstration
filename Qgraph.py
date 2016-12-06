@@ -200,9 +200,9 @@ class Agent:
 
 
 
-def run(no_of_runs,epsilon,rewardmax):
+def run(no_of_runs,epsilon,rewardmax,demon=False,Q=[]):
     
-
+    
     #robot.go_to_pose(Pose(200, 200, 0,angle_z=degrees(90)), relative_to_robot=False).wait_for_completed()
     #print (robot.pose)
     
@@ -211,14 +211,19 @@ def run(no_of_runs,epsilon,rewardmax):
     bot = Agent((0,0),field,epsilon,rewardmax)
     k=0
     moves_like_jagger=[]
-
+    if (demon):
+       bot.Q=np.load("lfd5.npy")
+       input=()
+    if(len(Q)!=0):
+       bot.Q=Q
+       input=()
+        
     print('enter:')
 
     
 
     executed_moves=[]
     movesr=[]
-
     l=1
     
     while(True):
@@ -233,7 +238,7 @@ def run(no_of_runs,epsilon,rewardmax):
                 l=1
                 continue
                 
-        
+            
         moves=bot.get_legal_moves()
         
 
@@ -353,6 +358,10 @@ def run(no_of_runs,epsilon,rewardmax):
                     print(len(movesr),"Movesr")
                     k=k+1
                     moves_like_jagger.append(len(movesr))
+                    plt.plot(movesr)
+                    plt.xlabel("No of episodes")
+                    plt.ylabel("no of moves required to reach a goal")
+                    
                     movesr=[]
             if(k>=no_of_runs):
                #print (moves_like_jagger,sum(moves_like_jagger)/len(moves_like_jagger))
@@ -360,8 +369,8 @@ def run(no_of_runs,epsilon,rewardmax):
                #plt.savefig('foof.png')
                #plt.show()
                #sns.lmplot(x="runs", y="No of episodes to converge", data=moves_like_jagger);
-
-               return(moves_like_jagger)
+               plt.savefig("Decay curve")
+               return(moves_like_jagger,sum(moves_like_jagger)/len(moves_like_jagger),bot.Q)
             #l=input()
             
                         
@@ -377,18 +386,24 @@ if __name__ == '__main__':
         
      try:
         epsilons=[0.7,0.8,0.9]
-        no_of_runs=100
+        no_of_runs=1
         
         jagger=[]
         strs=[]
         r=10
+        ms=[]
+        Q=[]
         for e in epsilons:
-            jagger.append(run(100,e,r))
+            j,m,Q=run(100,e,r,False,Q)
+            jagger.append(j)
+            ms.append(m)
+        for i in range(len(epsilons)):
+                   print ("for epsilon =",epsilons[i],"mean = ",ms[i] )       
         for l,j in enumerate(jagger):
             plt.plot(j,label=str(epsilons[l]))        
         plt.xlabel("no of runs")
         plt.ylabel("no of episodes to converge")
-        plt.savefig('Comparision.png')
+        plt.savefig('Comparision-lfd4.png')
                    
                 
 
