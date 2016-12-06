@@ -335,7 +335,7 @@ def run(no_of_runs,epsilon,rewardmax):
         if(bot.current_state[0]==4 and bot.current_state[1]==4):
             #robot.set_all_backpack_lights(cozmo.lights.blue_light)
             #robot.play_anim_trigger(cozmo.anim.Triggers.MajorWin).wait_for_completed()
-            bot.print_map()
+            #bot.print_map()
             #robot.go_to_pose(poser, relative_to_robot=False).wait_for_completed()
             #print(poser)
             #print(robot.pose)
@@ -355,10 +355,10 @@ def run(no_of_runs,epsilon,rewardmax):
                     moves_like_jagger.append(len(movesr))
                     movesr=[]
             if(k>=no_of_runs):
-               print (moves_like_jagger,sum(moves_like_jagger)/len(moves_like_jagger))
-               plt.plot(moves_like_jagger)
-               plt.savefig('foof.png')
-               plt.show()
+               #print (moves_like_jagger,sum(moves_like_jagger)/len(moves_like_jagger))
+               #plt.plot(moves_like_jagger)
+               #plt.savefig('foof.png')
+               #plt.show()
                #sns.lmplot(x="runs", y="No of episodes to converge", data=moves_like_jagger);
 
                return(moves_like_jagger)
@@ -376,7 +376,21 @@ if __name__ == '__main__':
      #cozmo.setup_basic_logging()
         
      try:
-         run(100,0.99,100)
+        epsilons=[0.7,0.8,0.9]
+        no_of_runs=100
+        
+        jagger=[]
+        strs=[]
+        r=10
+        for e in epsilons:
+            jagger.append(run(100,e,r))
+        for l,j in enumerate(jagger):
+            plt.plot(j,label=str(epsilons[l]))        
+        plt.xlabel("no of runs")
+        plt.ylabel("no of episodes to converge")
+        plt.savefig('Comparision.png')
+                   
+                
 
      except KeyboardInterrupt as e:
         sys.exit("Interrupted")
